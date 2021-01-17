@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2888b507dcf40118502034b7911efc3, type: 3}
+  m_Name: Asteroid
+  m_EditorClassIdentifier: 
+  mainSprite: {fileID: 21300000, guid: 6853ba3a3b7ceef41b22baffe66f6575, type: 3}
+  speed: 1
+  attack: 1
+  hp: 1
+  isBullet: 0
+  isUfo: 0
+  ufosBulletTemplate: {fileID: 0}
+  ufosBulletData: {fileID: 0}
+  ufosShootTimeout: 0
+  points: 20
+  timeout: 1
+  secondStage: {fileID: 11400000, guid: 863559b7a2501bc4db44402ca83f5d96, type: 2}
+  size: {x: 1, y: 1}
+  colliderSize: {x: 1, y: 1}
+  sound: {fileID: 8300000, guid: ca476cad5f952ef48b6be5d59da0d84b, type: 3}
+  deadSound: {fileID: 8300000, guid: ff7a6bf1200b08742b7348b9b2ee0a85, type: 3}
