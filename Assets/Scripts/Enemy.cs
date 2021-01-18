@@ -24,36 +24,6 @@ public class Enemy : MonoBehaviour
 
     public BulletSpawnPoint point;
 
-    /// <summary>
-    /// Initialize enemy
-    /// </summary>
-    /// <param name="_data"></param>
-    /// <param name="owner"></param>
-    public void Init(EnemyData _data, GameObject _owner = null)
-    {
-        data = _data;
-        _isStart = true;
-        HPoints = data.Hp;
-        Owner = _owner;
-        GetComponent<SpriteRenderer>().sprite = data.MainSprite;
-        
-        gameObject.transform.localScale = data.Size;
-        GetComponent<BoxCollider2D>().size = data.ColliderSize;;
-        if (!IsBullet)
-        {
-            if (IsUfo)
-            {
-                var child = gameObject.transform.GetChild(0);
-                if (child != null)
-                    point = child.gameObject.GetComponent<BulletSpawnPoint>();
-                
-                Player = GameObject.Find("Player"); 
-            }
-            
-            StartCoroutine(Move());
-        }
-    }
-
     public int Attack
     {
         get { return data.Attack; }
@@ -156,6 +126,36 @@ public class Enemy : MonoBehaviour
     {
         get { return data.SecondStage; }
         protected set {}
+    }
+    
+    /// <summary>
+    /// Initialize enemy
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <param name="owner"></param>
+    public void Init(EnemyData _data, GameObject _owner = null)
+    {
+        data = _data;
+        _isStart = true;
+        HPoints = data.Hp;
+        Owner = _owner;
+        GetComponent<SpriteRenderer>().sprite = data.MainSprite;
+        
+        gameObject.transform.localScale = data.Size;
+        GetComponent<BoxCollider2D>().size = data.ColliderSize;;
+        if (!IsBullet)
+        {
+            if (IsUfo)
+            {
+                var child = gameObject.transform.GetChild(0);
+                if (child != null)
+                    point = child.gameObject.GetComponent<BulletSpawnPoint>();
+                
+                Player = GameObject.Find("Player"); 
+            }
+            
+            StartCoroutine(Move());
+        }
     }
 
     public void Hit(int damage, GameObject owner = null)

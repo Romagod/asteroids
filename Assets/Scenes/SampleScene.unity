@@ -1699,6 +1699,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3419293860872489037, guid: 017cb846acf96fd40ad41bbf2c636b15, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3419293860872489038, guid: 017cb846acf96fd40ad41bbf2c636b15, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1759,6 +1763,10 @@ PrefabInstance:
       propertyPath: healthsUI
       value: 
       objectReference: {fileID: 418821234}
+    - target: {fileID: 3419293860872489039, guid: 017cb846acf96fd40ad41bbf2c636b15, type: 3}
+      propertyPath: controlsUI
+      value: 
+      objectReference: {fileID: 18298248}
     - target: {fileID: 3419293860872489039, guid: 017cb846acf96fd40ad41bbf2c636b15, type: 3}
       propertyPath: gameOverUI
       value: 
@@ -1974,5 +1982,6 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 474503404}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8065403890849404602, guid: 2034494b72ca10d4ca2bfbe3da8626a6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2034494b72ca10d4ca2bfbe3da8626a6, type: 3}
