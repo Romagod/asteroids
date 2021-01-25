@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public static Action OnPlayerDead;
     public static Action<int> OnScoreSet;
+    public static Action OnBuyBonus;
     public static Action<int> OnHealthsSet;
     public static Action<EnemyData> OnPlaySound;
     
@@ -31,34 +32,55 @@ public class Player : MonoBehaviour
     
     [Tooltip("Time Between Shots")] 
     [Range(0.1f, 2.0f)]
-    [SerializeField]
+    [HideInInspector]
     private float startTimeoutShots = 1.0f;
 
     [SerializeField] private int score;
     public int Score
     {
         get { return score; }
-        protected set { score = value; }
+        set { score = value; OnScoreSet(score);}
     }
-    
+    [HideInInspector]
     public BulletSpawnPoint point;
-    
     public Rigidbody2D rb;
     public float timeoutShots;
-
-
     public int hPoints;
+    private bool _inHit = false;
+    private AudioSource _audioSource;
+    private AudioSource _bonusAudioSource;
+    private Animator _animator;
+    private static readonly int DamageAnimation = Animator.StringToHash("PlayerDamagedAnimation");
+    private static readonly int HealthsAnimation = Animator.StringToHash("PlayerHealsAnimation");
 
-    
-    private AudioSource audioSource;
-
+    /// <summary>
+    /// Initialize GameObject component
+    /// </summary>
     private void Start()
     {
         transform.position = startPosition;
         rb = GetComponent<Rigidbody2D>();
-        audioSource = GetComponent<AudioSource>();
+        _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+        LoadData();
         point = gameObject.transform.GetChild(0).gameObject.GetComponent<BulletSpawnPoint>();
-        hPoints = healths;
+        var bonusAudioSourceGO = GameObject.Find("BonusAudioSource");
+        if (_bonusAudioSource != null)
+        {
+            this._bonusAudioSource = bonusAudioSourceGO.GetComponent<AudioSource>();
+        }
+    }
+
+    /// <summary>
+    /// Loading data from PlayerPrefs if is exists, or from EnemyData
+    /// </summary>
+    private void LoadData()
+    {
+        float timeout = PlayerPrefs.GetFloat("TimeoutShots");
+        if (timeout <= 0)
+            startTimeoutShots = bulletData.Timeout;
+        else
+            startTimeoutShots = timeout;
     }
 
     private void FixedUpdate()
@@ -72,19 +94,19 @@ public class Player : MonoBehaviour
     /// </summary>
     private void moveHandler()
     {
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
         {
             rb.AddForce(transform.up * speed, (ForceMode2D) ForceMode.Impulse);
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.UpArrow))
         {
             rb.AddForce(-transform.up * speed, (ForceMode2D) ForceMode.Impulse);
         }
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
         {
             transform.Rotate(Vector3.forward, rotationSpeed);
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow))
         {
             transform.Rotate(Vector3.back, rotationSpeed);
         }
@@ -116,11 +138,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enter key pressed event handler for shoot.
+    /// </summary>
     private void shootHandler()
     {
         if (timeoutShots <= 0)
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Return))
             {
                 var prefab = Instantiate(bulletPrefab);
                 var script = prefab.GetComponent<Enemy>();
@@ -130,7 +155,7 @@ public class Player : MonoBehaviour
                 prefab.transform.rotation = gameObject.transform.rotation;
                 timeoutShots = startTimeoutShots;
                 if (bulletData.Sound != null)
-                    audioSource.PlayOneShot(bulletData.Sound, 1);
+                    _audioSource.PlayOneShot(bulletData.Sound, 1);
             }
         }
         else
@@ -139,31 +164,117 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Collision trigger.
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter2D(Collider2D other)
     {
         var obj = other.gameObject;
-        if (EnemySpawner.Enemies.ContainsKey(obj))
+        if (!obj.GetComponent<Enemy>().IsBonus)
         {
-            if (!EnemySpawner.Enemies[obj].IsBullet)
-                Hit(EnemySpawner.Enemies[obj].Attack);
+            if (EnemySpawner.Enemies.ContainsKey(obj))
+            {
+                if (!EnemySpawner.Enemies[obj].IsBullet)
+                    Hit(EnemySpawner.Enemies[obj].Attack);
+            }
         }
     }
     
+    /// <summary>
+    /// Collision exit trigger 
+    /// </summary>
+    /// <param name="other"></param>
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        _inHit = false;
+    }
+    
+    /// <summary>
+    /// Hit action for player
+    /// </summary>
+    /// <param name="damage"></param>
     public void Hit(int damage)
     {
-        hPoints -= damage;
+        if (!_inHit)
+        {
+            _inHit = true;
+            hPoints -= damage;
+            OnHealthsSet(hPoints);
+            if (hPoints <= 0)
+            {
+                gameObject.SetActive(false);
+                OnPlayerDead();
+            }
+            else
+            {
+                if (_animator)
+                {
+                    _animator.Play(DamageAnimation);
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Add Healths action for player
+    /// </summary>
+    /// <param name="_bonus"></param>
+    public void AddHealths(BonusData _bonus)
+    {
+        hPoints += _bonus.Value;
         OnHealthsSet(hPoints);
         if (hPoints <= 0)
         {
-            gameObject.SetActive(false);
+            gameObject.SetActive(value: false);
             OnPlayerDead();
+        }
+        else
+        {
+            if (_animator)
+            {
+                _animator.Play(HealthsAnimation);
+                if (_bonusAudioSource != null && _bonus.Sound != null)
+                {
+                    _bonusAudioSource.PlayOneShot(
+                        clip: _bonus.Sound, 
+                        volumeScale: 1
+                        );
+                }
+            }
         }
     }
     
+    /// <summary>
+    /// Set weapon action for player
+    /// </summary>
+    /// <param name="_bonus"></param>
+    public void SetWeapon(BonusData _bonus)
+    {
+        bulletData.SetWeapon(_bonus);
+        LoadData();
+        _animator.Play(HealthsAnimation);
+        if (_bonusAudioSource != null && _bonus.Sound != null)
+        {
+            _bonusAudioSource.PlayOneShot(
+                clip: _bonus.Sound, 
+                volumeScale: 1
+                );
+        }
+    }
+    
+    /// <summary>
+    /// Restart action for player
+    /// </summary>
     public void Restart()
     {
         gameObject.SetActive(false);
-        hPoints = healths;
+        int _healths = PlayerPrefs.GetInt("Player.Healths");
+        if (_healths > 0)
+            hPoints = _healths;
+        else
+            hPoints = healths;
+        
         score = 0;
         gameObject.SetActive(true);
         Start();

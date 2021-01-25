@@ -24,7 +24,7 @@ public class EnemyData : ScriptableObject
     public int Attack
     {
         get { return attack; }
-        protected set {}
+        protected set { attack = value; }
     }
     
     [Tooltip("Enemy healths")]
@@ -48,6 +48,14 @@ public class EnemyData : ScriptableObject
     public bool IsUfo
     {
         get { return isUfo; }
+        protected set {}
+    }
+    
+    [Tooltip("Is Bonus Type")]
+    [SerializeField] private bool isBonus;
+    public bool IsBonus
+    {
+        get { return isBonus; }
         protected set {}
     }
     
@@ -88,7 +96,7 @@ public class EnemyData : ScriptableObject
     public float Timeout
     {
         get { return timeout; }
-        protected set {}
+        protected set { timeout = value; }
     }
     
     [Tooltip("Second Stage if Enemy was destroy")]
@@ -129,5 +137,39 @@ public class EnemyData : ScriptableObject
     {
         get { return deadSound; }
         protected set {}
+    }
+    
+    [Tooltip("Probability of spawn")]
+    [Range(0.00f, 100.00f)]
+    [SerializeField] private float probability;
+    public float Probability
+    {
+        get { return probability; }
+        protected set {}
+    }
+    
+    [Tooltip("It's Bonus Data")]
+    [SerializeField] private BonusData bonusSettings;
+    public BonusData BonusSettings
+    {
+        get { return bonusSettings; }
+        protected set {}
+    }
+
+    /// <summary>
+    /// Action for setting players weapon
+    /// </summary>
+    /// <param name="_bonusData"></param>
+    public void SetWeapon(BonusData _bonusData)
+    {
+        float timeout = Timeout;
+        PlayerPrefs.SetInt("PlayerAttack", _bonusData.Value);
+        if ((timeout / (_bonusData.Value/2f)) >= 0.08f)
+            timeout /= (_bonusData.Value/2f);
+        else
+            timeout = 0.08f;
+        PlayerPrefs.SetFloat("TimeoutShots", timeout);
+        
+        PlayerPrefs.Save();
     }
 }

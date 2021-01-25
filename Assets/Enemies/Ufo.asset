@@ -27,4 +27,5 @@ MonoBehaviour:
   size: {x: 1, y: 1}
   colliderSize: {x: 0.9, y: 0.9}
   sound: {fileID: 8300000, guid: b34881538195ef44e99ce48cac6bc83a, type: 3}
-  deadSound: {fileID: 8300000, guid: ff7a6bf1200b08742b7348b9b2ee0a85, type: 3}
+  deadSound: {fileID: 8300000, guid: cd834b1d2545e894cbf0dafc4e36fd31, type: 3}
+  probability: 70.9

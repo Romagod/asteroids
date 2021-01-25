@@ -52,8 +52,13 @@ MonoBehaviour:
   healthsUI: {fileID: 0}
   musicToggleUI: {fileID: 0}
   controlsUI: {fileID: 0}
+  winnerUI: {fileID: 0}
+  nextTargetUI: {fileID: 0}
   soundtrack:
   - {fileID: 8300000, guid: 7ff00627cb4379844b3ab3ae2aa52d65, type: 3}
+  bonuses:
+  - {fileID: 11400000, guid: 8a046998f830c94449f8e9a3b9063422, type: 2}
+  levelOptions: {fileID: 11400000, guid: c27783dee5eb2764e972121b1d7957a8, type: 2}
 --- !u!82 &3419293860872489037
 AudioSource:
   m_ObjectHideFlags: 0

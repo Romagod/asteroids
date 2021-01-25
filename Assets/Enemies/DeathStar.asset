@@ -15,16 +15,19 @@ MonoBehaviour:
   mainSprite: {fileID: 21300000, guid: c05671a3f6d14ad42af4513bec094424, type: 3}
   speed: 8
   attack: 2
-  hp: 2
+  hp: 7
   isBullet: 0
   isUfo: 1
+  isBonus: 0
   ufosBulletTemplate: {fileID: 3642248735997617125, guid: 7ccf54d0d785b524d93516d5834d5c6f, type: 3}
   ufosBulletData: {fileID: 11400000, guid: b80a6d602f9f6a44ebed71648a216a60, type: 2}
   ufosShootTimeout: 2
   points: 1000
   timeout: 6
-  secondStage: {fileID: 11400000, guid: 777d7240fa9600945a33671a07233f41, type: 2}
+  secondStage: {fileID: 11400000, guid: 03787e27630c74c4da33fd40526888c5, type: 2}
   size: {x: 1, y: 1}
   colliderSize: {x: 1, y: 1}
   sound: {fileID: 8300000, guid: b34881538195ef44e99ce48cac6bc83a, type: 3}
-  deadSound: {fileID: 8300000, guid: ff7a6bf1200b08742b7348b9b2ee0a85, type: 3}
+  deadSound: {fileID: 8300000, guid: cd834b1d2545e894cbf0dafc4e36fd31, type: 3}
+  probability: 13.4
+  bonusSettings: {fileID: 0}

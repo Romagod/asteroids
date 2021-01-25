@@ -18,6 +18,7 @@ MonoBehaviour:
   hp: 1
   isBullet: 0
   isUfo: 0
+  isBonus: 0
   ufosBulletTemplate: {fileID: 0}
   ufosBulletData: {fileID: 0}
   ufosShootTimeout: 0
@@ -27,4 +28,6 @@ MonoBehaviour:
   size: {x: 1, y: 1}
   colliderSize: {x: 1, y: 1}
   sound: {fileID: 8300000, guid: ca476cad5f952ef48b6be5d59da0d84b, type: 3}
-  deadSound: {fileID: 8300000, guid: ff7a6bf1200b08742b7348b9b2ee0a85, type: 3}
+  deadSound: {fileID: 8300000, guid: cd834b1d2545e894cbf0dafc4e36fd31, type: 3}
+  probability: 0
+  bonusSettings: {fileID: 0}
